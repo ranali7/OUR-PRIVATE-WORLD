@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+    <title>Our Private World ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #fff0f3;
+            --text-main: #2d0a13;
+            --primary-accent: #ff85a1;
+            --dark-accent: #ff477e;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        body { 
+            margin: 0; padding: 0; background: var(--bg-base); 
+            font-family: 'Poppins', sans-serif; color: var(--text-main);
+            overflow-x: hidden; touch-action: manipulation;
+            transition: background 0.5s ease;
+        }
+
+        /* --- PASSWORD OVERLAY --- */
+        #password-overlay {
+            position: fixed; inset: 0; background: var(--bg-base);
+            z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .pw-card {
+            background: white; padding: 30px; border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 71, 126, 0.2);
+            text-align: center; width: 100%; max-width: 320px;
+        }
+        .pw-input {
+            width: 80%; padding: 12px; border: 2px solid var(--bg-base);
+            border-radius: 15px; margin: 20px 0; text-align: center;
+            font-size: 1rem; outline: none;
+        }
+        .pw-input:focus { border-color: var(--primary-accent); }
+
+        /* --- MAIN UI --- */
+        #main-content { display: none; } /* Hidden until password correct */
+
+        #heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .bg-heart { position: absolute; color: var(--primary-accent); animation: bgFloat 10s linear infinite; opacity: 0.4; }
+        
+        @keyframes bgFloat {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .app-shell { position: relative; z-index: 10; max-width: 480px; margin: 0 auto; padding: 20px; }
+
+        .polaroid-container {
+            background: white; padding: 15px 15px 40px 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: rotate(-2deg); margin: 20px auto;
+            width: 85%; border: 1px solid #eee; text-align: center;
+        }
+        .polaroid-container img { width: 100%; height: auto; max-height: 400px; object-fit: cover; }
+        .polaroid-caption { font-family: 'Dancing Script', cursive; font-size: 1.5rem; margin-top: 15px; color: #555; }
+
+        .video-frame { border: 8px solid #f8edeb; border-radius: 15px; overflow: hidden; position: relative; background: #000; }
+        .engraved-text { background: #f8edeb; padding: 10px; font-size: 0.7rem; font-weight: 600; color: #b07d7d; text-align: center; }
+
+        .mood-grid { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+        .mood-btn { border: none; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; font-size: 1.2rem; background: white; }
+
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(8px); border: 2px solid white; border-radius: 24px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .btn { background: linear-gradient(135deg, var(--primary-accent), var(--dark-accent)); color: white; border: none; padding: 15px; width: 100%; border-radius: 18px; font-weight: 700; cursor: pointer; }
+        
+        #game-container { position: relative; width: 100%; height: 250px; background: white; border-radius: 24px; overflow: hidden; border: 2px solid var(--primary-accent); margin-bottom: 25px; }
+        .time-display { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .t-num { font-size: 1.4rem; font-weight: 800; color: var(--dark-accent); }
+        .t-lbl { font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; }
+        
+        h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--dark-accent); margin: 0; }
+        footer { font-size: 0.7rem; opacity: 0.4; text-align: center; margin: 40px 0; }
+    </style>
+</head>
+<body>
+
+<div id="password-overlay">
+    <div class="pw-card">
+        <h1 style="font-size: 1.8rem;">Enter Secret Code ❤️</h1>
+        <p style="font-size: 0.8rem; color: var(--dark-accent);">Only for Maryam</p>
+        <input type="password" id="pw-input" class="pw-input" placeholder="Password...">
+        <button class="btn" onclick="checkPassword()">Unlock Our World</button>
+        <p id="error-msg" style="color: red; font-size: 0.7rem; margin-top: 10px; display: none;">Oops! Wrong code, try again love.</p>
+    </div>
+</div>
+
+<div id="main-content">
+    <div id="heart-bg"></div>
+
+    <div class="app-shell">
+        <header style="text-align: center; margin-bottom: 20px;">
+            <p style="font-size: 0.8rem; letter-spacing: 2px; color: var(--primary-accent);">💞💟FOR MY FAVORITE PERSON MARYAM JABBAR💟💞</p>
+            <h1>Our Private World ❤️</h1>
+        </header>
+
+        <div class="mood-grid">
+            <button class="mood-btn" onclick="changeMood('#fff0f3')">🌸</button>
+            <button class="mood-btn" onclick="changeMood('#f8edeb')">☕</button>
+            <button class="mood-btn" onclick="changeMood('#e8e8e8')">☁️</button>
+            <button class="mood-btn" onclick="changeMood('#ffddd2')">🌅</button>
+        </div>
+
+        <div class="polaroid-container">
+            <img src="https://lh3.googleusercontent.com/d/1bRdTXtYKFC_ahw3iBh1hXqtFKDNx979N" alt="Us">
+            <div class="polaroid-caption">Forever with you...</div>
+        </div>
+
+        <div class="glass-card" style="padding: 10px;">
+            <div class="video-frame">
+                <iframe 
+                    src="https://drive.google.com/file/d/1PARvOqMnvTvf-DZt-3ytLYawM9f5Llhz/preview" 
+                    width="100%" height="250" allow="autoplay" style="border:none;">
+                </iframe>
+                <div class="engraved-text">✧ Bound by an Eternal Love ✧</div>
+            </div>
+        </div>
+
+        <div id="game-container">
+            <div class="game-header" style="position: absolute; top: 10px; width:100%; text-align:center; z-index:5;">
+                <div style="font-weight: 800; color: var(--dark-accent);">Hearts Caught: <span id="score">0</span></div>
+            </div>
+            <div id="start-overlay" style="position: absolute; inset: 0; background: rgba(255,255,255,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10;">
+                <p style="font-weight: 600;">Catch my love!</p>
+                <button class="btn" style="width: auto; padding: 10px 30px;" onclick="startGame()">Start Game</button>
+            </div>
+            <div id="game-area"></div>
+        </div>
+
+        <div class="glass-card">
+            <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 10px;">Countdown to Oct 27 💌</div>
+            <div class="time-display">
+                <div class="time-box"><span class="t-num" id="d">00</span><br><span class="t-lbl">Days</span></div>
+                <div class="time-box"><span class="t-num" id="h">00</span><br><span class="t-lbl">Hrs</span></div>
+                <div class="time-box"><span class="t-num" id="m">00</span><br><span class="t-lbl">Min</span></div>
+                <div class="time-box"><span class="t-num" id="s">00</span><br><span class="t-lbl">Sec</span></div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <p id="comp-text" style="font-weight: 600;">You make every day feel like a dream.</p>
+            <button class="btn" onclick="newCompliment()">Get a Mood Boost ✨</button>
+        </div>
+
+        <footer>MADE WITH 💖 BY RANA ALI • FOR THE LOVE OF MY LIFE MARYAM✨💟🌹</footer>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+    // --- PASSWORD LOGIC ---
+    function checkPassword() {
+        const input = document.getElementById('pw-input').value;
+        const correctPW = "BBG28"; // SET YOUR PASSWORD HERE
+        
+        if(input === correctPW) {
+            document.getElementById('password-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            startTimerLoop();
+        } else {
+            document.getElementById('error-msg').style.display = 'block';
+        }
+    }
+
+    // Allow "Enter" key to submit password
+    document.getElementById("pw-input").addEventListener("keyup", function(event) {
+        if (event.key === "Enter") { checkPassword(); }
+    });
+
+    function changeMood(color) {
+        document.body.style.background = color;
+        confetti({ particleCount: 30, spread: 50, origin: { y: 0.2 } });
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        let target = new Date(`October 27, ${now.getFullYear()} 00:00:00`);
+        if (now > target) target.setFullYear(target.getFullYear() + 1);
+        const diff = target - now;
+        document.getElementById('d').innerText = Math.floor(diff / 86400000);
+        document.getElementById('h').innerText = Math.floor((diff / 3600000) % 24);
+        document.getElementById('m').innerText = Math.floor((diff / 60000) % 60);
+        document.getElementById('s').innerText = Math.floor((diff / 1000) % 60);
+    }
+    
+    function startTimerLoop() {
+        setInterval(updateTimer, 1000); 
+        updateTimer();
+    }
+
+    let score = 0;
+    let gameActive = false;
+    const gameArea = document.getElementById('game-area');
+
+    function startGame() {
+        score = 0;
+        document.getElementById('score').innerText = score;
+        document.getElementById('start-overlay').style.display = 'none';
+        gameActive = true;
+        spawnHeart();
+    }
+
+    function spawnHeart() {
+        if (!gameActive) return;
+        const heart = document.createElement('div');
+        heart.style.position = 'absolute';
+        heart.style.fontSize = '30px';
+        heart.style.cursor = 'pointer';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * (gameArea.clientWidth - 40) + 'px';
+        heart.style.top = '-50px';
+        gameArea.appendChild(heart);
+
+        let pos = -50;
+        const speed = 2 + Math.random() * 2;
+        const fall = setInterval(() => {
+            if (!gameActive) { clearInterval(fall); heart.remove(); return; }
+            pos += speed;
+            heart.style.top = pos + 'px';
+            if (pos > 250) { clearInterval(fall); heart.remove(); endGame(); }
+        }, 20);
+
+        heart.onclick = () => {
+            score++;
+            document.getElementById('score').innerText = score;
+            clearInterval(fall);
+            heart.remove();
+            confetti({ particleCount: 15, origin: { x: 0.5, y: 0.5 } });
+            spawnHeart();
+        };
+    }
+
+    function endGame() {
+        gameActive = false;
+        document.getElementById('start-overlay').style.display = 'flex';
+        document.getElementById('start-overlay').innerHTML = `<p>Caught ${score} Hearts!</p><button class="btn" style="width:auto; padding:10px 20px;" onclick="startGame()">Retry</button>`;
+    }
+
+    function newCompliment() {
+        const comps = ["You're my favorite human.", "I love your soul.", "You're incredibly smart.", "I'm so lucky you're mine.", "You are my sunshine."];
+        document.getElementById('comp-text').innerText = comps[Math.floor(Math.random()*comps.length)];
+        confetti({ particleCount: 40, spread: 70, origin: { y: 0.8 } });
+    }
+
+    // BG Hearts
+    const bg = document.getElementById('heart-bg');
+    for(let i=0; i<15; i++) {
+        const h = document.createElement('div');
+        h.className = 'bg-heart'; h.innerHTML = '❤️';
+        h.style.left = Math.random()*100+'vw'; h.style.animationDelay = Math.random()*10+'s';
+        bg.appendChild(h);
+    }
+</script>
+</body>
+</html>
